@@ -4,11 +4,11 @@ An online quiz-game platform built with Next.js, TailwindCSS & The Trivia API.
 
 ## Hosted application
 
-Quzify is proudly hosted on Vercel at [quizify.ishaanbedi.in](https://quizify.ishaanbedi.in/)
+Quzify is proudly hosted on Vercel at [quizify.ishaanbedi.com](https://quizify.ishaanbedi.com/)
 
 ## Developer
 
-- Developed & maintained by [Ishaan Bedi](https://www.ishaanbedi.in/)
+- Developed & maintained by [Ishaan Bedi](https://www.ishaanbedi.com/)
 
 ## Acknowledgements
 
@@ -17,7 +17,7 @@ Quzify is proudly hosted on Vercel at [quizify.ishaanbedi.in](https://quizify.is
 
 ## Feedback
 
-If you have any feedback, please reach out to me at hi@ishaanbedi.in
+If you have any feedback, please reach out to me at hi@ishaanbedi.com
 
 ## **License**
 

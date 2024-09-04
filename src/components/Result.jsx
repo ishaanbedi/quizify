@@ -1,159 +1,203 @@
+import React, { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Award,
+  CheckCircle,
+  XCircle,
+  ChevronDown,
+  Sparkles,
+} from 'lucide-react';
 
-const Result = (props) => {
+const Result = ({ score, correctAnswers, wrongAnswers }) => {
+  const totalQuestions =
+    Object.keys(correctAnswers).length + Object.keys(wrongAnswers).length;
+  const percentage = Math.round((score / totalQuestions) * 100);
+
   return (
-    <div>
+    <div className='min-h-screen overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 text-white'>
       <Head>
-        <title>Quzify : You scored {props.score} points</title>
+        <title>
+          Quzify : You scored {score}/{totalQuestions}
+        </title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
       </Head>
 
-      <section className='flex min-h-screen  items-center bg-black'>
-        <div className=' m-auto mt-24 p-8 sm:p-12'>
-          <p className='text-center text-sm font-semibold uppercase tracking-widest text-cyan-500'>
-            Game Over
-          </p>
+      <main className='container relative mx-auto px-4 py-12'>
+        <AnimatedBackground />
 
-          <h5 className='mt-6 text-center text-3xl font-bold text-cyan-50'>
-            Your final score is {props.score}{' '}
-            {props.score > 1 ? 'points.' : 'point.'}
-          </h5>
-
-          <div className='flex'>
-            <div className='mx-auto'>
-              <Link href='/'>
-                <button className='mt-12 inline-block w-32 rounded-full bg-cyan-600 py-4 text-sm font-bold text-white shadow-xl hover:bg-cyan-500 active:bg-cyan-700'>
-                  Play Again
-                </button>
-              </Link>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          className='relative z-10 text-center'
+        >
+          <h1 className='mb-6 bg-gradient-to-r from-pink-300 to-indigo-300 bg-clip-text text-5xl font-bold text-transparent'>
+            Quiz Complete!
+          </h1>
+          <motion.div
+            className='flex items-center justify-center space-x-4'
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+          >
+            <Award className='h-24 w-24 text-yellow-300' />
+            <div>
+              <h2 className='bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-8xl font-extrabold text-transparent'>
+                {percentage}%
+              </h2>
+              <p className='mt-2 text-2xl text-indigo-200'>
+                {score}/{totalQuestions} correct
+              </p>
             </div>
-          </div>
+          </motion.div>
+        </motion.div>
 
-          {Object.entries(props.correctAnswers).length > 0 ? (
-            <div className='mt-12 w-full divide-y divide-gray-200 rounded-xl border border-gray-200 bg-cyan-50'>
-              <h4 className='py-2 text-center'>
-                Here are the questions you got right
-              </h4>
-              {Object.entries(props.correctAnswers).map((e, i) => {
-                return (
-                  <details key={i} className='group p-6'>
-                    <summary className='flex cursor-pointer items-center justify-between'>
-                      <h5 className='text-md font-bold text-gray-900'>
-                        Q. {e[1].question}
-                      </h5>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          className='mt-12 flex justify-center'
+        >
+          <Link href='/'>
+            <button className='transform rounded-full bg-gradient-to-r from-pink-500 to-indigo-500 px-8 py-4 text-lg font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:from-pink-600 hover:to-indigo-600 hover:shadow-xl'>
+              Play Again
+            </button>
+          </Link>
+        </motion.div>
 
-                      <span className='relative ml-1.5 h-5 w-5 flex-shrink-0'>
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          className='absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0'
-                          fill='none'
-                          viewBox='0 0 24 24'
-                          stroke='currentColor'
-                          strokeWidth='2'
-                        >
-                          <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            d='M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
-                          />
-                        </svg>
-
-                        <svg
-                          xmlns='http://www.w3.org/2000/svg'
-                          className='absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100'
-                          fill='none'
-                          viewBox='0 0 24 24'
-                          stroke='currentColor'
-                          strokeWidth='2'
-                        >
-                          <path
-                            strokeLinecap='round'
-                            strokeLinejoin='round'
-                            d='M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
-                          />
-                        </svg>
-                      </span>
-                    </summary>
-
-                    <p className='mt-4 leading-relaxed text-gray-700'>
-                      You answered it correctly by giving{' '}
-                      <span className='font-bold underline underline-offset-2'>
-                        {e[1].correctAnswer}
-                      </span>{' '}
-                      as the answer.
-                    </p>
-                  </details>
-                );
-              })}
-            </div>
-          ) : (
-            <div className='my-24 text-cyan-50'>
-              {' '}
-              You did not answer any question correctly!
-            </div>
-          )}
-
-          <div className='mt-12 w-full divide-y divide-gray-200 rounded-xl border border-gray-200 bg-cyan-50'>
-            <h4 className='py-2 text-center'>
-              Here are the questions you got wrong
-            </h4>
-            {Object.entries(props.wrongAnswers).map((e, i) => {
-              return (
-                <details key={i} className='group p-6'>
-                  <summary className='flex cursor-pointer items-center justify-between'>
-                    <h5 className='text-md font-bold text-gray-900'>
-                      Q. {e[1].question}
-                    </h5>
-
-                    <span className='relative ml-1.5 h-5 w-5 flex-shrink-0'>
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        className='absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        stroke='currentColor'
-                        strokeWidth='2'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          d='M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
-                        />
-                      </svg>
-
-                      <svg
-                        xmlns='http://www.w3.org/2000/svg'
-                        className='absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100'
-                        fill='none'
-                        viewBox='0 0 24 24'
-                        stroke='currentColor'
-                        strokeWidth='2'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          d='M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
-                        />
-                      </svg>
-                    </span>
-                  </summary>
-
-                  <p className='mt-4 leading-relaxed text-gray-700'>
-                    The correct answer to this question was{' '}
-                    <span className='font-bold underline underline-offset-2'>
-                      {e[1].correctAnswer}
-                    </span>
-                    .
-                  </p>
-                </details>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+        <motion.div
+          className='mt-16 grid gap-8 md:grid-cols-2'
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.5 }}
+        >
+          <AnswerSection
+            title='Correct Answers'
+            answers={correctAnswers}
+            icon={<CheckCircle className='h-8 w-8 text-green-400' />}
+            bgColor='bg-green-800'
+          />
+          <AnswerSection
+            title='Incorrect Answers'
+            answers={wrongAnswers}
+            icon={<XCircle className='h-8 w-8 text-red-400' />}
+            bgColor='bg-red-800'
+          />
+        </motion.div>
+      </main>
     </div>
   );
 };
+
+const AnswerSection = ({ title, answers, icon, bgColor }) => {
+  const [expandedKey, setExpandedKey] = useState(null);
+
+  return (
+    <motion.div
+      className={`rounded-2xl ${bgColor} bg-opacity-20 p-6 shadow-xl backdrop-blur-md`}
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.2 }}
+    >
+      <h3 className='mb-6 flex items-center text-3xl font-bold'>
+        {icon}
+        <span className='ml-3'>{title}</span>
+      </h3>
+      <div className='space-y-4'>
+        {Object.entries(answers).map(([key, { question, correctAnswer }]) => (
+          <motion.div
+            key={key}
+            initial={false}
+            animate={{
+              backgroundColor:
+                expandedKey === key
+                  ? 'rgba(255,255,255,0.1)'
+                  : 'rgba(255,255,255,0)',
+            }}
+            transition={{ duration: 0.3 }}
+            className='overflow-hidden rounded-lg'
+          >
+            <motion.button
+              className='flex w-full items-center justify-between p-4 text-left'
+              onClick={() => setExpandedKey(expandedKey === key ? null : key)}
+            >
+              <span className='font-medium'>{question}</span>
+              <motion.span
+                animate={{ rotate: expandedKey === key ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown />
+              </motion.span>
+            </motion.button>
+            <AnimatePresence initial={false}>
+              {expandedKey === key && (
+                <motion.div
+                  initial='collapsed'
+                  animate='expanded'
+                  exit='collapsed'
+                  variants={{
+                    expanded: { opacity: 1, height: 'auto' },
+                    collapsed: { opacity: 0, height: 0 },
+                  }}
+                  transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                >
+                  <div className='px-4 pb-4'>
+                    <motion.p
+                      className='text-indigo-200'
+                      initial={{ y: -10, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 0.2, delay: 0.1 }}
+                    >
+                      {title === 'Correct Answers' ? (
+                        <>You answered correctly: </>
+                      ) : (
+                        <>The correct answer was: </>
+                      )}
+                      <span className='font-bold text-white'>
+                        {correctAnswer}
+                      </span>
+                    </motion.p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
+
+const AnimatedBackground = () => (
+  <div className='absolute inset-0 z-0 overflow-hidden'>
+    {[...Array(20)].map((_, i) => (
+      <motion.div
+        key={i}
+        className='absolute'
+        style={{
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+        }}
+        animate={{
+          y: [0, Math.random() * 100 - 50],
+          x: [0, Math.random() * 100 - 50],
+          scale: [0, 1, 0],
+          rotate: [0, 360],
+        }}
+        transition={{
+          duration: Math.random() * 10 + 10,
+          repeat: Infinity,
+          repeatType: 'reverse',
+        }}
+      >
+        <Sparkles
+          className='text-indigo-300 opacity-30'
+          size={Math.random() * 20 + 10}
+        />
+      </motion.div>
+    ))}
+  </div>
+);
 
 export default Result;
